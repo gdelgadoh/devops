@@ -9,6 +9,11 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn clean compile'
+
+                echo 'Quality Gate'                
+                withSonarQubeEnv('SonarServer') {
+	        		sh 'mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+		       	}	
             }
         }
     }
