@@ -12,7 +12,7 @@ pipeline {
 
                 echo 'Quality Gate'                
                 withSonarQubeEnv('SonarServer') {
-	        		sh 'mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+	        		sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
 		       	}	
             }
         }
