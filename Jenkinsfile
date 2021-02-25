@@ -2,17 +2,15 @@ pipeline {
     agent none
 
     environment {
-		registry = "gdelgadoh/devops" 
-	    registryCredential = 'dockerhub'
-	    dockerImage = ''
+        registry = "gdelgadoh/devops" 
+        registryCredential = 'dockerhub'
+        dockerImage = ''
         branchName = ''
 	}
     options {
         timestamps()
         skipDefaultCheckout()      // Don't checkout automatically
     }
-
-
 
     stages {
         stage('Checkout') {
@@ -34,12 +32,19 @@ pipeline {
                         branchName = env.BRANCH_NAME
                     }
                  }
-                sh 'mvn clean compile'
-                echo "Nombre de branch: ${branchName}"
+                echo 'Compilar'
+                sh 'mvn clean compile', label: "Compilar"
+                //echo "Nombre de branch: ${branchName}"
+
+                echo 'Cobertura'
+                sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent install', label: "Cobertura" 
+                jacoco execPattern: '**/target/**.exec'
+                junit '**/target/surefire-reports/*.xml'
+
 
                 echo 'Quality Gate'                
                 withSonarQubeEnv('SonarServer') {
-	        		sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${branchName} "
+	        		sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${branchName}", label: "Sonar y QualityGate"
 		       	}	
                 sleep(30)	       	
 		       	timeout(time: 1, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
@@ -47,6 +52,9 @@ pipeline {
 	        		waitForQualityGate abortPipeline: true
 	        		
 		       	}
+
+                echo 'Build'
+	       		sh 'mvn clean package -Dmaven.test.skip=true', label: "Contruir artefacto" 
             }
         }
     }
