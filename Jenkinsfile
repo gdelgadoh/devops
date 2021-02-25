@@ -16,7 +16,7 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            gent { label 'master' }
+            agent any
             steps {
                 checkout scm
             }
