@@ -6,16 +6,12 @@ pipeline {
         }
     }
 
-    environment {
-        branchId = ""
-    }
 
     stages {
         stage('Build') {
             steps {
                 sh 'mvn clean compile'
-                branchId = env.BRANCH_NAME
-                echo "Nombre de branch: ${branchId}"
+                echo "Nombre de branch: ${env.BRANCH_NAME}"
 
                 echo 'Quality Gate'                
                 withSonarQubeEnv('SonarServer') {
