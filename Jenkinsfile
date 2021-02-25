@@ -12,13 +12,7 @@ pipeline {
         skipDefaultCheckout()      // Don't checkout automatically
     }
 
-    script {
 
-        if (!env.BRANCH_NAME.contains("main")) {
-            branchName = env.BRANCH_NAME
-        }
-
-    }
 
     stages {
         stage('Checkout') {
@@ -34,6 +28,11 @@ pipeline {
 		        }
     		}  
             steps {
+                script {
+                    if (!env.BRANCH_NAME.contains("main")) {
+                        branchName = env.BRANCH_NAME
+                    }
+                 }
                 sh 'mvn clean compile'
                 echo "Nombre de branch: ${branchName}"
 
