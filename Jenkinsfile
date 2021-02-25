@@ -5,10 +5,19 @@ pipeline {
 		registry = "gdelgadoh/devops" 
 	    registryCredential = 'dockerhub'
 	    dockerImage = ''
+        branchName = ''
 	}
     options {
         timestamps()
         skipDefaultCheckout()      // Don't checkout automatically
+    }
+
+    script {
+
+        if (!env.BRANCH_NAME.contains("main")) {
+            branchName = env.BRANCH_NAME
+        }
+
     }
 
     stages {
@@ -26,11 +35,11 @@ pipeline {
     		}  
             steps {
                 sh 'mvn clean compile'
-                //echo "Nombre de branch: ${env.BRANCH_NAME}"
+                echo "Nombre de branch: ${branchName}"
 
                 echo 'Quality Gate'                
                 withSonarQubeEnv('SonarServer') {
-	        		sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${env.BRANCH_NAME} "
+	        		sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${branchName} "
 		       	}	
                 sleep(30)	       	
 		       	timeout(time: 1, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
