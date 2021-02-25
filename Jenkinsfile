@@ -5,10 +5,17 @@ pipeline {
             args '-v /Users/gdelgadoh/.m2:/root/.m2'
         }
     }
+
+    environment {
+        branchId = ""
+    }
+
     stages {
         stage('Build') {
             steps {
                 sh 'mvn clean compile'
+                branchId = env.BRANCH_NAME
+                echo "Nombre de branch: ${branchId}"
 
                 echo 'Quality Gate'                
                 withSonarQubeEnv('SonarServer') {
