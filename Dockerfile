@@ -6,4 +6,4 @@ WORKDIR /home/devops/
 
 EXPOSE 8080
 
-CMD [ "java", "-jar", "devopsgit .jar" ]
+CMD [ "java", "-jar", "devops.jar" ]
