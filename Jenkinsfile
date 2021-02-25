@@ -56,4 +56,23 @@ pipeline {
             }
         }
     }
+    stage('Build Docker Image') { 
+       		agent any
+            steps {
+            	script {
+            	    /*def now = new Date()
+            	    year = now.format("yyyy", TimeZone.getTimeZone('GMT-06'))
+                	month = now.format("MM", TimeZone.getTimeZone('GMT-06'))
+                	day = now.format("dd", TimeZone.getTimeZone('GMT-06'))*/
+                	dockerImageName = registry + ":$BUILD_NUMBER"
+                	
+                	dockerImage = docker.build "${dockerImageName}"
+                	docker.withRegistry( '', registryCredential ) {
+                		dockerImage.push()
+                		//dockerImage.push('	')
+                	}
+            	} 
+            	sh "docker rmi $registry:$BUILD_NUMBER"	         
+            }
+        } 
 }
