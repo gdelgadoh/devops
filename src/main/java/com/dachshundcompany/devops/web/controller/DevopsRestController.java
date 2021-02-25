@@ -53,7 +53,7 @@ public class DevopsRestController {
      */
     @GetMapping
     public List<Tool> getTools() {
-        List result = new ArrayList<Tool>();
+        List<Tool> result = new ArrayList<>();
         toolService.findAll().forEach(result::add);
         return result;
     }
