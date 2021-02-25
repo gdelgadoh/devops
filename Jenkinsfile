@@ -33,18 +33,18 @@ pipeline {
                     }
                  }
                 echo 'Compilar'
-                sh 'mvn clean compile', label: "Compilar"
+                sh 'mvn clean compile'
                 //echo "Nombre de branch: ${branchName}"
 
                 echo 'Cobertura'
-                sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent install', label: "Cobertura" 
+                sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent install' 
                 jacoco execPattern: '**/target/**.exec'
                 junit '**/target/surefire-reports/*.xml'
 
 
                 echo 'Quality Gate'                
                 withSonarQubeEnv('SonarServer') {
-	        		sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${branchName}", label: "Sonar y QualityGate"
+	        		sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${branchName}"
 		       	}	
                 sleep(30)	       	
 		       	timeout(time: 1, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
@@ -52,7 +52,7 @@ pipeline {
 		       	}
 
                 echo 'Build'
-	       		sh 'mvn clean package -Dmaven.test.skip=true', label: "Contruir artefacto" 
+	       		sh 'mvn clean package -Dmaven.test.skip=true' 
             }
         }
     }
