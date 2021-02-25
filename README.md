@@ -38,3 +38,14 @@ Este proyecto es un ejemplo de una aplicación Java usando Spring Boot que utili
 10. Se crea version inicial del _Jenkinsfile_ y _Dockerfile_
 11. En nuestro servidor de Jenkins definir un job multibranch, se crean las credenciales a GitHub y se usa el url de nuestro repositorio.
 12. En nuestro servidor de Jenkins instalamos y configuramos el plugin de [Sonar SonarQube scanner](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-jenkins/).
+13. Como instalamos la versión Free SonarQube, necesitamos instalar el plugin [Sonarqube Community Branch Plugin](https://github.com/mc1arke/sonarqube-community-branch-plugin) para poder utilizar análisis de branches con Sonar (Esto esta activo desde la versión Developer hacia arriba). Seguir los siguientes pasos:
+
+- Ir al siguiente enlace y descargar el jar [sonarqube-community-branch-plugin-1.6.0.jar
+  ](https://github.com/mc1arke/sonarqube-community-branch-plugin/releases/download/1.6.0/sonarqube-community-branch-plugin-1.6.0.jar)
+- Copiar el jar dentro del volumen de sonarque en la siguiente ruta: **_sonarqube/extensions/download_**
+- En la terminal entrar al contenedor de sonar con el siguiente comando: `docker exec -it sonarqube bash`.
+- Dentro del contenedor ir a la siguiente ruta: `cd /opt/sonarqube/extensions/downloads/`
+- Copiamos el jar a `lib/common` con el siguiente comando: `cp sonarqube-community-branch-plugin-1.6.0.jar /opt/sonarqube/lib/common/`
+- Salimos del contenedor con el comando `exit`
+- Reiniciamos Sonar con el siguiente comando `docker restart sonarqube`
+- Esperamos que vuelva a subir y a estar funcional y ya se puede hacer análisis de branches.
