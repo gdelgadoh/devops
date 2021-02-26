@@ -33,7 +33,7 @@ public class DevopsRestController {
 
     }
 
-    @RequestMapping("/hello")
+    @GetMapping(path = "/hello")
     public String sayHello() {
 
         return "Hello World!";
