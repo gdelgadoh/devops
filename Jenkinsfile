@@ -40,8 +40,8 @@ pipeline {
 
                 echo 'Cobertura'
                 sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent install' 
-                //jacoco execPattern: '**/target/**.exec'
-                //junit '**/target/surefire-reports/*.xml'
+                jacoco execPattern: '**/target/**.exec'
+                junit '**/target/surefire-reports/*.xml'
 
 
                 echo 'Quality Gate'                
