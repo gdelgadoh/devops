@@ -39,8 +39,8 @@ pipeline {
                 echo "Valor para sonar.branch.name: ${branchName}"
 
                 echo 'Cobertura'
-                sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent install' 
-                jacoco execPattern: '**/target/*.exec'
+                sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -DfailIfNoTests=false' 
+                jacoco execPattern: '**/target/**.exec'
                 junit '**/target/surefire-reports/*.xml'
 
 
