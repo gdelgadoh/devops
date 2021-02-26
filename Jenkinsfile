@@ -29,13 +29,14 @@ pipeline {
     		}  
             steps {
                 script {
+                    branchName = ''
                     if (!env.BRANCH_NAME.contains("main")) {
                         branchName = env.BRANCH_NAME
                     }
                  }
                 echo 'Compilar'
                 sh 'mvn clean compile'
-                //echo "Nombre de branch: ${branchName}"
+                echo "Nombre de branch: ${branchName}"
 
                 echo 'Cobertura'
                 sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent install' 
