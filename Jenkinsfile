@@ -64,10 +64,9 @@ pipeline {
                     if ( branchName.equals("") ) {
 
                         version = ":$BUILD_NUMBER"
-                        latest = true
 
                     } else {
-                        version = branchName.replace("/", "-") + "-$BUILD_NUMBER"
+                        version = ":" + branchName.replace("/", "-") + "-$BUILD_NUMBER"
                     }
 
                 	dockerImageName = registry + version
@@ -77,7 +76,7 @@ pipeline {
                         dockerImage.push('latest')
                 	}
 
-                    if (latest) {
+                    if (branchName.equals("")) {
                         docker.withRegistry( '', registryCredential ) {
                             dockerImage.push('latest')
                 	    }
