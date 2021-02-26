@@ -31,7 +31,7 @@ pipeline {
                     dockerImageName = registry + ":"
                     if (!env.BRANCH_NAME.contains("main")) {
                         branchName = env.BRANCH_NAME
-                        dockerImageName = dockerImageName + branchName.replace("/", "-")
+                        dockerImageName = dockerImageName + branchName.replace("/", "-") + "-"
                     }
                  }
                 echo 'Compilar'
@@ -61,7 +61,7 @@ pipeline {
        		agent any
             steps {
             	script {
-                	dockerImageName = dockerImageName + ":$BUILD_NUMBER"
+                	dockerImageName = dockerImageName + "$BUILD_NUMBER"
                 	
                 	dockerImage = docker.build "${dockerImageName}"
                 	docker.withRegistry( '', registryCredential ) {
