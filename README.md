@@ -49,3 +49,15 @@ Este proyecto es un ejemplo de una aplicación Java usando Spring Boot que utili
 - Salimos del contenedor con el comando `exit`
 - Reiniciamos Sonar con el siguiente comando `docker restart sonarqube`
 - Esperamos que vuelva a subir y a estar funcional y ya se puede hacer análisis de branches.
+
+14. En Jenkins en la siguiente ruta: **Adminitrar Jenkins > Manage Credentials** en el Scope **Jenkins** y el Dominio **Global credentials** dar click en **Add Credentials** y se escoge del tipo _Username and password_. Incluir las credenciales para ingresar a [dockerhub](https://hub.docker.com/). El id de estas credenciales se va a utilizar en el Jenkinsfile en la siguiente parte:
+
+```
+    environment {
+        registry = "gdelgadoh/devops"
+        registryCredential = 'ID_DE_CREDENCIALES_PARA_DOCKERHUB'
+        dockerImage = ''
+        branchName = ''
+        version = ''
+	}
+```
