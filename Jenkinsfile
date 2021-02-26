@@ -6,6 +6,7 @@ pipeline {
         registryCredential = 'dockerhub'
         dockerImage = ''
         branchName = ''
+        version = ''
 	}
     options {
         timestamps()
@@ -66,7 +67,7 @@ pipeline {
                         latest = true
 
                     } else {
-                        version = branchName.replace("/", "-") + ":$BUILD_NUMBER"
+                        version = branchName.replace("/", "-") + "-$BUILD_NUMBER"
                     }
 
                 	dockerImageName = registry + version
@@ -82,8 +83,9 @@ pipeline {
                 	    }
                         sh "docker rmi $registry:latest"
                     }
+                    sh "docker rmi $registry:$version"	 
             	} 
-            	sh "docker rmi $registry:$BUILD_NUMBER"	 
+            	
                 	         
             }
         } 
