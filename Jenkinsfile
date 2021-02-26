@@ -30,12 +30,12 @@ pipeline {
             steps {
                 script {
                     if (!env.BRANCH_NAME.contains("main")) {
-                        branchName = env.BRANCH_NAME
+                        env.branchName = env.BRANCH_NAME
                     }
                  }
                 echo 'Compilar'
                 sh 'mvn clean compile'
-                //echo "Nombre de branch: ${branchName}"
+                echo "Nombre de branch: ${env.branchName}"
 
                 echo 'Cobertura'
                 sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent install' 
@@ -45,7 +45,7 @@ pipeline {
 
                 echo 'Quality Gate'                
                 withSonarQubeEnv('SonarServer') {
-	        		sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${branchName}"
+	        		sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.branch.name=${env.branchName}"
 		       	}	
                 sleep(30)	       	
 		       	timeout(time: 1, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
@@ -61,12 +61,12 @@ pipeline {
             steps {
             	script {
 
-                    if ( branchName.equals("") ) {
+                    if ( env.branchName.equals("") ) {
 
                         version = ":$BUILD_NUMBER"
 
                     } else {
-                        version = ":" + branchName.replace("/", "-") + "-$BUILD_NUMBER"
+                        version = ":" + env.branchName.replace("/", "-") + "-$BUILD_NUMBER"
                     }
 
                 	dockerImageName = registry + version
@@ -75,7 +75,7 @@ pipeline {
                 		dockerImage.push()
                 	}
 
-                    if (branchName.equals("")) {
+                    if (env.branchName.equals("")) {
                         docker.withRegistry( '', registryCredential ) {
                             dockerImage.push('latest')
                 	    }
