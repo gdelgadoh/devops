@@ -73,7 +73,6 @@ pipeline {
                 	dockerImage = docker.build "${dockerImageName}"
                 	docker.withRegistry( '', registryCredential ) {
                 		dockerImage.push()
-                        dockerImage.push('latest')
                 	}
 
                     if (branchName.equals("")) {
