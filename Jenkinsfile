@@ -28,10 +28,8 @@ pipeline {
     		}  
             steps {
                 script {
-                    dockerImageName = registry + ":"
                     if (!env.BRANCH_NAME.contains("main")) {
                         branchName = env.BRANCH_NAME
-                        dockerImageName = dockerImageName + branchName.replace("/", "-") + "-"
                     }
                  }
                 echo 'Compilar'
@@ -61,16 +59,32 @@ pipeline {
        		agent any
             steps {
             	script {
-                	dockerImageName = dockerImageName + "$BUILD_NUMBER"
-                	
+
+                    if ( "".equal(branchName) ) {
+
+                        version = ":$BUILD_NUMBER"
+                        latest = true
+
+                    } else {
+                        version = branchName.replace("/", "-") + ":$BUILD_NUMBER"
+                    }
+
+                	dockerImageName = registry + version
                 	dockerImage = docker.build "${dockerImageName}"
                 	docker.withRegistry( '', registryCredential ) {
                 		dockerImage.push()
                         dockerImage.push('latest')
                 	}
+
+                    if (latest) {
+                        docker.withRegistry( '', registryCredential ) {
+                            dockerImage.push('latest')
+                	    }
+                        sh "docker rmi $registry:latest"
+                    }
             	} 
             	sh "docker rmi $registry:$BUILD_NUMBER"	 
-                sh "docker rmi $registry:latest"	         
+                	         
             }
         } 
 
