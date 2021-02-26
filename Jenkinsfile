@@ -29,9 +29,9 @@ pipeline {
     		}  
             steps {
                 script {
-                    branchName = ''
+                    branchName = ""
                     if (!env.BRANCH_NAME.contains("main")) {
-                        branchName = env.BRANCH_NAME
+                        //branchName = env.BRANCH_NAME
                     }
                  }
                 echo 'Compilar'
