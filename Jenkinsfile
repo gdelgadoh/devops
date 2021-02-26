@@ -29,9 +29,9 @@ pipeline {
     		}  
             steps {
                 script {
-                    branchName = ""
+                    branchName = "master"
                     if (!env.BRANCH_NAME.contains("main")) {
-                        //branchName = env.BRANCH_NAME
+                        branchName = env.BRANCH_NAME
                     }
                  }
                 echo 'Compilar'
@@ -62,7 +62,7 @@ pipeline {
             steps {
             	script {
 
-                    if ( branchName.equals("") ) {
+                    if ( branchName.equals("master") ) {
 
                         version = ":$BUILD_NUMBER"
 
@@ -76,7 +76,7 @@ pipeline {
                 		dockerImage.push()
                 	}
 
-                    if (branchName.equals("")) {
+                    if (branchName.equals("master")) {
                         docker.withRegistry( '', registryCredential ) {
                             dockerImage.push('latest')
                 	    }
