@@ -61,7 +61,7 @@ pipeline {
             steps {
             	script {
 
-                    if ( "".equal(branchName) ) {
+                    if ( branchName.equals("") ) {
 
                         version = ":$BUILD_NUMBER"
                         latest = true
